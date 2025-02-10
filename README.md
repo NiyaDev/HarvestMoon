@@ -8,17 +8,12 @@ Macros are only being used when a peice of code is repeated *SO* much that is ma
 ## Progress
 NOTE: Numbers are based on a direct comparison between the outputted file and the original. Actual code and documentation is a different story.
 
-[75,529 / 524,288] | ~[0.144%] Similarity as of 2022/10/18.
+[37136 / 524288] | ~[7.0831298800%] Similarity as of 2025/2/9.
 
 ## Building
 NOTE: A step in the build script is comparing the output ROM to a backup copy of the released game, and that file is not included for obvious reasons. While I *currently* have no plans to switch over to a special build system, I will be working on improving this as I go forward.
 
-### Building on Windows
-Using a cli in the main folder type in the command:
-
-`.\build.bat`
-
-No fancy build system, It just simply creates a directory named /target/debug/%CurrentDate%, copies the src files into it.
+No fancy build system, just compiles into target/.
 
 It then runs, in this order:
 - rgbasm
@@ -27,8 +22,5 @@ It then runs, in this order:
 
 Finally it compares the output ROM with an original *backup* located at \ROM\HarvestMoonGB.gb and outputs the result into compared.txt.
 
-### Building on Linux
-TODO:
+`.\build.sh`
 
-### Building on Mac
-I'm going to need someone else for this. I don't have any apple products to test on and I don't plan on getting any.
