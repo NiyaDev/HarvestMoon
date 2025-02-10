@@ -313,3 +313,5 @@ FUN_2426::
 section "2468", rom0[$2468] 
 FUN_2468::
 
+
+section "end", romx[$7FFF], bank[31]

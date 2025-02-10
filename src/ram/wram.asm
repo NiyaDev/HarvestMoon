@@ -23,7 +23,7 @@ ds $0002
 
 wD3A3:: db  ; $D3A3
 
-ds $095C
+ds $0965
 
 wDD00:: db  ; $DD00
 

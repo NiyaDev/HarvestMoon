@@ -5,7 +5,7 @@ clear
 
 rgbasm  -o target/harvestmoon_gb.o   src/entry.asm
 rgblink -o target/harvestmoon_gb.gb target/harvestmoon_gb.o
-rgbfix     target/harvestmoon_gb.gb -j -k E9 -l 0x33 -m 0x03 -r 0x02 -s -t "HARVEST-MOON GB" -v -p 0x00
+rgbfix     target/harvestmoon_gb.gb -j -k E9 -l 0x33 -m 0x03 -r 0x02 -s -t "HARVEST-MOON GB" -v -p 0xFF
 
 filesize=$(cat rom/HarvestMoonGB.gb | wc -c)
 diffs=$(radiff2 -c rom/HarvestMoonGB.gb target/harvestmoon_gb.gb)
