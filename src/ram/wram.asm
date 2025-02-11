@@ -21,6 +21,10 @@ wD397:: db  ; $D397
 
 ds $0002
 
+; These could be Audio values
+wD3A0:: db  ; $D3A0
+wD3A1:: db  ; $D3A1
+wD3A2:: db  ; $D3A2
 wD3A3:: db  ; $D3A3
 
 ds $0965

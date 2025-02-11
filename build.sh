@@ -2,6 +2,14 @@
 
 clear
 
+version=$1
+asmflags="-o "
+if [ "$version" == "GB" ] || [ "$version" == "" ]; then
+	asmflags=$asmflags"-D _GB"
+fi
+if [ "$version" == "GBC" ]; then
+	asmflags=$asmflags"-D _GBC"
+fi
 
 rgbasm  -o target/harvestmoon_gb.o   src/entry.asm
 rgblink -o target/harvestmoon_gb.gb target/harvestmoon_gb.o

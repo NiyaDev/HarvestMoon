@@ -33,17 +33,16 @@ Start::
 ; Set Stack pointer
   ld sp,$DFEF
 
-; memclr($_RUNDMA,$007F)
+; Zero out DMA function
   ld hl,_RUNDMA
   ld bc,$007F
   call memclr
 
-; memclr($DD00,$00FF)
+; Zero out $DD00->$DDFF
   ld hl,$DD00
   ld bc,$00FF
   call memclr
 
-; copy_dma()
   call copy_dma
 
 ; Set BG palette to 0
@@ -282,21 +281,33 @@ FUN_232F::
 
 section "2426", rom0[$2426] 
 FUN_2426::
+; Possibly audio initialization
+
+; FUN_2468(0,0)
   ld bc,0
   call FUN_2468
 
+; Turn Audio on
   ld a,$80
   ldh [rNR52],a
+; Turn off Audio panning
   xor a
   ldh [rNR51],a
-  ld [wD397],a
+  ld [wD397],a ;Set to same as rNR52?
   
+; Max out volume and turn off VIN
   ld a,$77
   ldh [rNR50],a
+
+; $FF, $00, $00, $00, $00
+; $00, $00, $00, $00, $00
+; $00, $00, $00, $00, $00
+; $00, $00, $00, $00, $00
+; $00, $00, $00, $02
+; x6
   ld hl,$D300
   ld b,6
   ld a,$FF
-
 .LAB_2441:
   ld [hl],a
   ld de,$0017
@@ -306,12 +317,21 @@ FUN_2426::
   dec b
   jr nz,.LAB_2441
 
+; Zero $D3A3
   xor a
   ld [wD3A3],a
   ret
 
 section "2468", rom0[$2468] 
 FUN_2468::
+; Sets three variables to b, c, and 0
+  ld a,b
+  ld [wD3A0],a
+  ld a,c
+  ld [wD3A1],a
+  xor a
+  ld [wD3A2],a
+  ret
 
 
 section "end", romx[$7FFF], bank[31]

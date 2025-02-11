@@ -3,7 +3,7 @@
 
 A disassembly of Harvest Moon GB. I do have plans to also decompile and examine Harvest Moon GBC, but we'll see if they actually share enough code base to be included here.
 
-Macros are only being used when a peice of code is repeated *SO* much that is makes it easier to read.
+Macros are only being used when a piece of code is repeated *SO* much that is makes it easier to read.
 
 ## Progress
 NOTE: Numbers are based on a direct comparison between the outputted file and the original. Actual code and documentation is a different story.
