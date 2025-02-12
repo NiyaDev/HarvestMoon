@@ -5,6 +5,11 @@ include "includes/hardware.inc"
 ;; RAM
 include "src/ram/wram.asm"
 
+;; Home
+include "src/resets.asm"
+include "src/interrupts.asm"
+include "src/home.asm"
+
 
 section "Entry", rom0[$0100]
 EntryPoint::
@@ -91,12 +96,11 @@ Start::
   push hl
   push af
 
-; FUN_208B($A7,$77,7)
-; TODO:
+; Calls FUN_77A7() in bank 7
   ld l,$A7
   ld h,$77
   ld a,7
-  call FUN_208B
+  call set_bank_then_jump
 
   pop af
   pop hl
@@ -147,8 +151,8 @@ Start::
   xor a
   ld [rRAMB],a
 
-; Set $C0A7 to $20
-  ld a,$20
+; Set $C0A7 to 32
+  ld a,32
   ld [wC0A7],a
 
   call vblank_wait
@@ -156,12 +160,11 @@ Start::
   push hl
   push af
 
-; FUN_208B($26,$24,0)
-; TODO:
+; Calls FUN_2426() in bank 0
   ld l,$26
   ld h,$24
   ld a,0
-  call FUN_208B
+  call set_bank_then_jump 
 
   pop af
   pop hl
@@ -173,24 +176,22 @@ Start::
   push hl
   push af
 
-; FUN_208B($26,$24,0)
-; TODO:
+; Calls FUN_2426() in bank 0
   ld l,$26
   ld h,$24
   ld a,0
-  call FUN_208B
+  call set_bank_then_jump 
 
   pop af
   pop hl
   push hl
   push af
 
-; FUN_208B($26,$24,0)
-; TODO:
+; Calls FUN_7816() in bank 7
   ld l,$16
   ld h,$78
   ld a,7
-  call FUN_208B
+  call set_bank_then_jump 
 
   pop af
   pop hl
@@ -206,12 +207,11 @@ Start::
   push hl
   push af
 
-; FUN_208B($26,$24,0)
-; TODO:
+; Calls FUN_2426() in bank 0
   ld l,$26
   ld h,$24
   ld a,0
-  call FUN_208B
+  call set_bank_then_jump
 
   pop af
   pop hl
@@ -235,12 +235,11 @@ Start::
   push hl
   push af
 
-; FUN_208B($49,$79,7)
-; TODO:
+; Calls FUN_7949() in bank 7
   ld l,$49
   ld h,$79
   ld a,7
-  call FUN_208B
+  call set_bank_then_jump
 
   pop af
   pop hl
@@ -262,16 +261,96 @@ Start::
   jp .LAB_01F7
 
 
-section "0061", rom0[$0061]
-FUN_0061::
-  nop 
 section "0258", rom0[$0258] 
 FUN_0258::
-  nop 
-section "208B", rom0[$208B] 
-FUN_208B::
-  nop 
+; Jump table:
+;   FUN_4001 bank  1 -  1
+;   FUN_5017 bank  2 -  2
+;   FUN_4001 bank  3 -  3
+;   FUN_4001 bank  4 -  4
+;   FUN_4001 bank  5 -  5
+;   FUN_4001 bank  6 -  6
+;   FUN_4001 bank  9 - 19
+;   FUN_46FC bank  9 - 20
+;   FUN_4CA5 bank  9 - 21
+;   FUN_4DD2 bank  9 - 22
+;   FUN_4EDB bank  9 - 23
+;   FUN_4001 bank 14 -  8
+;   FUN_54EA bank 14 -  9
+;   FUN_5AC6 bank 14 - 10
+;   FUN_6160 bank 14 - 11
+;   FUN_665A bank 14 - 12
+;   FUN_638E bank 15 - 15
+;   FUN_4001 bank 16 -  7
+;   FUN_4F17 bank 16 - 13
+;   FUN_4F2D bank 16 - 14
+;   FUN_4001 bank 29 - 16
+;   FUN_4350 bank 29 - 17
+;   FUN_468C bank 29 - 18
+;   FUN_6E51 bank 31 -  0
+  ld a,[wC0A7]
+  or a
+  rst $08
 
+dw $6E51
+  db $1F ; FUN_6E51 bank 31
+dw $4001
+  db $01 ; FUN_4001 bank 1
+dw $5017
+  db $02 ; FUN_5017 bank 2
+dw $4001
+  db $03 ; FUN_4001 bank 3
+dw $4001
+  db $04 ; FUN_4001 bank 4
+dw $4001
+  db $05 ; FUN_4001 bank 5
+dw $4001
+  db $06 ; FUN_4001 bank 6
+dw $4001
+  db $10 ; FUN_4001 bank 16
+dw $4001
+  db $0E ; FUN_4001 bank 14
+dw $54EA
+  db $0E ; FUN_54EA bank 14
+dw $5AC6
+  db $0E ; FUN_5AC6 bank 14
+dw $6160
+  db $0E ; FUN_6160 bank 14
+dw $665A
+  db $0E ; FUN_665A bank 14
+dw $4F17
+  db $10 ; FUN_4F17 bank 16
+dw $4F2D
+  db $10 ; FUN_4F2D bank 16
+dw $638E
+  db $0F ; FUN_638E bank 15
+dw $4001
+  db $1D ; FUN_4001 bank 29
+dw $4350
+  db $1D ; FUN_4350 bank 29
+dw $468C
+  db $1D ; FUN_468C bank 29
+dw $4001
+  db $09 ; FUN_4001 bank 9
+dw $46FC
+  db $09 ; FUN_46FC bank 9
+dw $4CA5
+  db $09 ; FUN_4CA5 bank 9
+dw $4DD2
+  db $09 ; FUN_4DD2 bank 9
+dw $4EDB
+  db $09 ; FUN_4EDB bank 9
+
+
+
+section "02E4", rom0[$02E4]
+FUN_02E4::
+  nop
+section "206C", rom0[$206C]
+FUN_206C::
+  nop
+
+include "src/jumptable.asm" ; $2078->20A0
 include "src/memory.asm"
 include "src/screen.asm"
 
@@ -333,5 +412,14 @@ FUN_2468::
   ld [wD3A2],a
   ret
 
+section "3317", rom0[$3317]
+FUN_3317::
+  nop
+section "33FF", rom0[$33FF]
+FUN_33FF::
+  nop
+section "340E", rom0[$340E]
+FUN_340E::
+  nop
 
 section "end", romx[$7FFF], bank[31]

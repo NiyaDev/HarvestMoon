@@ -7,6 +7,7 @@ wC0A2:: db  ; $C0A2
 ds 3
 wC0A6:: db  ; $C0A6
 wC0A7:: db  ; $C0A7
+            ; Seems to be jump table offset
 
 ds $0458
 
@@ -27,7 +28,7 @@ wD3A1:: db  ; $D3A1
 wD3A2:: db  ; $D3A2
 wD3A3:: db  ; $D3A3
 
-ds $0965
+ds $0962
 
 wDD00:: db  ; $DD00
 
