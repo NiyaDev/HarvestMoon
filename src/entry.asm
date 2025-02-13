@@ -1,6 +1,7 @@
 
 ;; Definitions
 include "includes/hardware.inc"
+include "src/macros.asm"
 
 ;; RAM
 include "src/ram/wram.asm"
@@ -97,10 +98,7 @@ Start::
   push af
 
 ; Calls FUN_77A7() in bank 7
-  ld l,$A7
-  ld h,$77
-  ld a,7
-  call set_bank_then_jump
+  banked_call 7, FUN_B7_77A7
 
   pop af
   pop hl
@@ -161,10 +159,7 @@ Start::
   push af
 
 ; Calls FUN_2426() in bank 0
-  ld l,$26
-  ld h,$24
-  ld a,0
-  call set_bank_then_jump 
+  banked_call 0, FUN_2426
 
   pop af
   pop hl
@@ -177,10 +172,7 @@ Start::
   push af
 
 ; Calls FUN_2426() in bank 0
-  ld l,$26
-  ld h,$24
-  ld a,0
-  call set_bank_then_jump 
+  banked_call 0, FUN_2426
 
   pop af
   pop hl
@@ -188,10 +180,7 @@ Start::
   push af
 
 ; Calls FUN_7816() in bank 7
-  ld l,$16
-  ld h,$78
-  ld a,7
-  call set_bank_then_jump 
+  banked_call 7, FUN_B7_7816
 
   pop af
   pop hl
@@ -208,10 +197,7 @@ Start::
   push af
 
 ; Calls FUN_2426() in bank 0
-  ld l,$26
-  ld h,$24
-  ld a,0
-  call set_bank_then_jump
+  banked_call 0, FUN_2426
 
   pop af
   pop hl
@@ -236,10 +222,7 @@ Start::
   push af
 
 ; Calls FUN_7949() in bank 7
-  ld l,$49
-  ld h,$79
-  ld a,7
-  call set_bank_then_jump
+  banked_call 7, FUN_B7_7949
 
   pop af
   pop hl
@@ -354,9 +337,137 @@ include "src/jumptable.asm" ; $2078->20A0
 include "src/memory.asm"
 include "src/screen.asm"
 
+section "22E8", rom0[$22E8]
+FUN_22E8::
+; if value at hl == 7, return
+  ld a,[hl]
+  and 7
+  ret z
+
+; bc is set to a << 8
+  ld b,a
+  ld c,0
+.LAB_22EF::
+  push bc
+
+  ld a,0
+  ldh [c],a
+  ld a,$30
+  ldh [c],a
+
+  ld b,$10
+.LAB_22F8::
+  ld e,8
+  ld a,[hl+]
+  ld d,a
+
+.LAB_22FC::
+  bit 0,d
+  ld a,$10
+  jr nz,.LAB_2304
+
+  ld a,$20
+.LAB_2304::
+  ldh [c],a
+  ld a,$30
+  ldh [c],a
+
+  rr d
+  dec e
+  jr nz,.LAB_22FC
+
+  dec b
+  jr nz,.LAB_22F8
+
+  ld a,$20
+  ldh [c],a
+  ld a,$30
+  ldh [c],a
+
+  pop bc
+  dec b
+  ret z
+  call wait_7000
+  jr .LAB_22EF
+
 section "232F", rom0[$232F] 
 FUN_232F::
+; FUN_22E8($23A0)
+; TODO:
+  ld hl,$23A0
+  call FUN_22E8
+
+  call wait_7000
+
+; if joypad a+b/l+r are pressed
+  ldh a,[rP1]
+  and 3
+  cp 3
+  jr nz,.LAB_2385
+
+; 
+  ld a,P1F_GET_DPAD
+  ldh [rP1],a
+  ldh a,[rP1]
+  ldh a,[rP1]
+  call wait_7000
+
+  ld a,P1F_GET_NONE
+  ldh [rP1],a
+  call wait_7000
+
+  ld a,P1F_GET_BTN
+  ldh [rP1],a
+  ldh a,[rP1]
+  ldh a,[rP1]
+  ldh a,[rP1]
+  ldh a,[rP1]
+  ldh a,[rP1]
+  ldh a,[rP1]
+  call wait_7000
+
+  ld a,$30
+  ldh [rP1],a
+  ldh a,[rP1]
+  ldh a,[rP1]
+  ldh a,[rP1]
+  call wait_7000
+
+  ldh a,[rP1]
+  and 3
+  cp 3
+  jr nz,.LAB_2385
+
+  ld hl,$2390
+  call FUN_22E8
+  call wait_7000
+  sub a
+  ret
+
+.LAB_2385::
+  ld hl,$2390
+  call FUN_22E8
+  call wait_7000
+  scf
+  ret
+
+section "wait_7000", rom0[$2323]
+wait_7000::
+; Loops 7000 times
+; or 10 * 7000 = 70,000 cycles
+; or ~0.02 seconds
+  ld de,7000
+.loop
   nop
+  nop
+  nop
+
+  dec de
+  ld a,d
+  or e
+  jr nz,.loop
+
+  ret
 
 section "2426", rom0[$2426] 
 FUN_2426::
@@ -421,5 +532,16 @@ FUN_33FF::
 section "340E", rom0[$340E]
 FUN_340E::
   nop
+
+section "77A7", romx[$77A7], bank[7]
+FUN_B7_77A7::
+  nop
+section "7816", romx[$7816], bank[7]
+FUN_B7_7816::
+  nop
+section "7949", romx[$7949], bank[7]
+FUN_B7_7949::
+  nop
+
 
 section "end", romx[$7FFF], bank[31]
