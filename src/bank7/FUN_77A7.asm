@@ -26,6 +26,7 @@ FUN_B7_77A7::
   push hl
   push bc
 
+; Send packets in reverse
   call send_sgb_packet
   call wait_7000
 
