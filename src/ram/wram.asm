@@ -31,4 +31,5 @@ wD3A3:: db  ; $D3A3
 ds $0962
 
 wDD00:: db  ; $DD00
+wDD01:: db  ; $DD01
 

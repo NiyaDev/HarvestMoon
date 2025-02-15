@@ -86,13 +86,13 @@ Start::
   ld [rRTCLATCH],a
 
 ; Zero out $DD00
+; The part that uses this in wait_7000 isn't used
   xor a
   ld [wDD00],a
 
-; bool FUN_232F()
-; TODO:
-  call FUN_232F
-  jr nc,.LAB_01AC
+; Check if SuperGameboy
+  call check_if_sgb
+  jr nc,.no_sgb
 
   push hl
   push af
@@ -103,7 +103,7 @@ Start::
   pop af
   pop hl
 
-.LAB_01AC:
+.no_sgb:
   di
 
 .LAB_01AD:
@@ -333,141 +333,64 @@ section "206C", rom0[$206C]
 FUN_206C::
   nop
 
-include "src/jumptable.asm" ; $2078->20A0
+include "src/jumptable.asm" ; $2078->$20A0
 include "src/memory.asm"
 include "src/screen.asm"
 
-section "22E8", rom0[$22E8]
-FUN_22E8::
-; if value at hl == 7, return
-  ld a,[hl]
-  and 7
-  ret z
+include "src/supergameboy.asm" ; $22E8->$23AF
 
-; bc is set to a << 8
-  ld b,a
-  ld c,0
-.LAB_22EF::
-  push bc
+section "23E9", rom0[$23E9]
+FUN_23E9::
+  push de
+  push af
+  push hl
 
-  ld a,0
-  ldh [c],a
-  ld a,$30
-  ldh [c],a
+  call vblank_wait
 
-  ld b,$10
-.LAB_22F8::
-  ld e,8
-  ld a,[hl+]
-  ld d,a
+  pop hl
+  ld a,$E4
+  ldh [rBGP],a
 
-.LAB_22FC::
-  bit 0,d
-  ld a,$10
-  jr nz,.LAB_2304
+  pop af
+  ld c,a
+  ld de,$8800
+  call FUN_3036
 
-  ld a,$20
-.LAB_2304::
-  ldh [c],a
-  ld a,$30
-  ldh [c],a
+  xor a
+  ldh [rSCY],a
+  ldh [rSCX],a
 
-  rr d
-  dec e
-  jr nz,.LAB_22FC
+  ld hl,$9800
+  ld de,12
+  ld a,$80
+  ld c,$0D
 
+.LAB_240B:
+  ld b,$14
+
+.LAB_240D:
+  ld [hl+],a
+  inc a
   dec b
-  jr nz,.LAB_22F8
+  jr nz,.LAB_240D
 
-  ld a,$20
-  ldh [c],a
-  ld a,$30
-  ldh [c],a
+  add hl,de
+  dec c
+  jr nz,.LAB_240B
 
-  pop bc
-  dec b
-  ret z
-  call wait_7000
-  jr .LAB_22EF
-
-section "232F", rom0[$232F] 
-FUN_232F::
-; FUN_22E8($23A0)
-; TODO:
-  ld hl,$23A0
-  call FUN_22E8
-
+  ld a,$81
+  ldh [rLCDC],a
   call wait_7000
 
-; if joypad a+b/l+r are pressed
-  ldh a,[rP1]
-  and 3
-  cp 3
-  jr nz,.LAB_2385
-
-; 
-  ld a,P1F_GET_DPAD
-  ldh [rP1],a
-  ldh a,[rP1]
-  ldh a,[rP1]
+  pop hl
+  call send_sgb_packet
   call wait_7000
 
-  ld a,P1F_GET_NONE
-  ldh [rP1],a
-  call wait_7000
-
-  ld a,P1F_GET_BTN
-  ldh [rP1],a
-  ldh a,[rP1]
-  ldh a,[rP1]
-  ldh a,[rP1]
-  ldh a,[rP1]
-  ldh a,[rP1]
-  ldh a,[rP1]
-  call wait_7000
-
-  ld a,$30
-  ldh [rP1],a
-  ldh a,[rP1]
-  ldh a,[rP1]
-  ldh a,[rP1]
-  call wait_7000
-
-  ldh a,[rP1]
-  and 3
-  cp 3
-  jr nz,.LAB_2385
-
-  ld hl,$2390
-  call FUN_22E8
-  call wait_7000
-  sub a
   ret
 
-.LAB_2385::
-  ld hl,$2390
-  call FUN_22E8
-  call wait_7000
-  scf
   ret
 
-section "wait_7000", rom0[$2323]
-wait_7000::
-; Loops 7000 times
-; or 10 * 7000 = 70,000 cycles
-; or ~0.02 seconds
-  ld de,7000
-.loop
-  nop
-  nop
-  nop
 
-  dec de
-  ld a,d
-  or e
-  jr nz,.loop
-
-  ret
 
 section "2426", rom0[$2426] 
 FUN_2426::
@@ -523,6 +446,10 @@ FUN_2468::
   ld [wD3A2],a
   ret
 
+section "3036", rom0[$3036]
+FUN_3036::
+  nop
+
 section "3317", rom0[$3317]
 FUN_3317::
   nop
@@ -533,9 +460,8 @@ section "340E", rom0[$340E]
 FUN_340E::
   nop
 
-section "77A7", romx[$77A7], bank[7]
-FUN_B7_77A7::
-  nop
+include "src/bank7/FUN_77A7.asm"
+
 section "7816", romx[$7816], bank[7]
 FUN_B7_7816::
   nop
