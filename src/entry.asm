@@ -4,6 +4,7 @@ include "includes/hardware.inc"
 include "src/macros.asm"
 
 ;; RAM
+include "src/ram/sram.asm"
 include "src/ram/wram.asm"
 
 ;; Home
@@ -329,6 +330,12 @@ dw $4EDB
 section "02E4", rom0[$02E4]
 FUN_02E4::
   nop
+section "07A9", rom0[$07A9]
+FUN_07A9::
+  nop
+section "07E9", rom0[$07E9]
+FUN_07E9::
+  nop
 section "206C", rom0[$206C]
 FUN_206C::
   nop
@@ -462,9 +469,6 @@ FUN_340E::
 
 include "src/bank7/FUN_77A7.asm"
 
-section "7816", romx[$7816], bank[7]
-FUN_B7_7816::
-  nop
 section "7949", romx[$7949], bank[7]
 FUN_B7_7949::
   nop
