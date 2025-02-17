@@ -469,9 +469,5 @@ FUN_340E::
 
 include "src/bank7/FUN_77A7.asm"
 
-section "7949", romx[$7949], bank[7]
-FUN_B7_7949::
-  nop
-
 
 section "end", romx[$7FFF], bank[31]

@@ -8,10 +8,18 @@ ds 3
 wC0A6:: db  ; $C0A6
 wC0A7:: db  ; $C0A7
             ; Seems to be jump table offset
+ds 2
 
-ds $0458
+wC0AA:: ds 16 ; $C0AA
+              ; A SGB command packet is "decompressed" here
+
+ds $0446
 
 wC500:: db  ; $C500
+
+ds $0650
+
+wCB50:: db
 
 
 section "wram1", wramx[$D000]
