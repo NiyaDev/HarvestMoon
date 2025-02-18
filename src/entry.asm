@@ -355,40 +355,45 @@ FUN_23E9::
   call vblank_wait
 
   pop hl
-  ld a,$E4
+
+; Setting intensity
+  ld a,%11100100
   ldh [rBGP],a
 
   pop af
   ld c,a
-  ld de,$8800
+  ld de,_VRAM8800
   call FUN_3036
 
+; Zero out viewport
   xor a
   ldh [rSCY],a
   ldh [rSCX],a
 
-  ld hl,$9800
+; 
+  ld hl,_SCRN0
   ld de,12
   ld a,$80
   ld c,$0D
+.outer
+  ld b,20
 
-.LAB_240B:
-  ld b,$14
-
-.LAB_240D:
+.inner
   ld [hl+],a
   inc a
   dec b
-  jr nz,.LAB_240D
+  jr nz,.inner
 
   add hl,de
   dec c
-  jr nz,.LAB_240B
+  jr nz,.outer
 
-  ld a,$81
+; Turn on LCD and background
+  ld a,LCDCF_ON | LCDCF_BGON
   ldh [rLCDC],a
   call wait_7000
 
+; Send packet in hl
   pop hl
   call send_sgb_packet
   call wait_7000

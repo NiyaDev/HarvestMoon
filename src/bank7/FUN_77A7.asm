@@ -45,12 +45,12 @@ FUN_B7_77A7::
 ;
   ld hl,$7D8A
   ld a,$13
-  ld de,$7965
+  ld de,ATTR_TRN_PACKET
   call FUN_23E9
 
   ld hl,$797F
   ld a,$10
-  ld de,$7965
+  ld de,ATTR_TRN_PACKET
   call FUN_23E9
 
   xor a
@@ -66,8 +66,7 @@ FUN_B7_77A7::
   ret
 
 
-PAL01_PACKET::
-; Sets Pal 0 colors
+PAL01_PACKET:: ; Sets Pal 0 colors
   db PAL_01 << 3 | $01
   db $FF, $7F
   db $FF, $7F
@@ -78,8 +77,6 @@ PAL01_PACKET::
   db $00, $00
   ds 1
 
-
-section "7816", romx[$7816], bank[7]
 
 FUN_B7_7816::
 ; Leave if zero
@@ -464,3 +461,5 @@ B_1::   db $38, $38, $38, $38, $00, $01
 B_2::   db $3C, $3C, $3C, $3C, $00, $01 
 B_3::   db $40, $40, $40, $40, $00, $01 
 
+
+section "farther_packet", romx[$7D8A], bank[7]
