@@ -460,7 +460,8 @@ FUN_2468::
 
 section "3036", rom0[$3036]
 FUN_3036::
-  nop
+  ld a,[rRAMB]
+  push af
 
 section "3317", rom0[$3317]
 FUN_3317::
