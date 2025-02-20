@@ -8,7 +8,7 @@ Macros are only being used when a piece of code is repeated *SO* much that is ma
 ## Progress
 NOTE: Numbers are based on a direct comparison between the outputted file and the original. Actual code and documentation is a different story.
 
-[1599 / 450231] | ~[.3551510200%] Similarity as of 2025/2/15.
+[1602 / 450231] | ~[.3558173400%] Similarity as of 2025/2/15.
 
 ## Building
 NOTE: A step in the build script is comparing the output ROM to a backup copy of the released game, and that file is not included for obvious reasons. While I *currently* have no plans to switch over to a special build system, I will be working on improving this as I go forward.
