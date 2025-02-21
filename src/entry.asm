@@ -463,6 +463,146 @@ FUN_3036::
   ld a,[rRAMB]
   push af
 
+  ld a,c
+  ld [$2100],a
+  ld a,d
+  ldh [$B9],a
+  ld a,e
+  ldh [$B8],a
+  ld a,[hl+]
+  ldh [$BA],a
+  add e
+  ldh [$BC]
+  ld a,[hl+]
+  ldh [$BB],
+  adc d
+  ldh [$BD],a
+  ld c,0
+
+.LAB_3052
+  ld a,c
+  and a
+  jr nz,.LAB_305A
+
+  ld a,[hl+]
+  ld b,a
+  ld c,8
+
+.LAB_305A
+  dec c
+  srl b
+  push bc
+  jr nc,.LAB_3065
+
+  ld a,[hl+]
+  ld [de],a
+  inc de
+  jr .LAB_30BA
+
+
+.LAB_3065
+  ld a,[hl+]
+  ld c,a
+  and $0f
+  inc a
+  inc a
+  inc a
+  ldh [$BE],a
+  ld a,[hl+]
+  ld b,a
+  push hl
+  srl b
+  rr c
+  srl b
+  rr c
+  srl b
+  rr c
+  srl b
+  rr c
+  ld a,e
+  sub c
+  ld c,a
+  ld a,d
+  sbc b
+  ld b,a
+  ldh a,[$B9]
+  cp b
+  jr c,.LAB_30AE
+
+  jr nz,.LAB_3095
+
+  ldh a,[$B8]
+  cp c
+  jr c,.LAB_30AE
+  jr z,.LAB_30AE
+
+.LAB_3095
+  ld a,c
+  xor $FF
+  inc a
+  ld b,a
+  ldh a,[$BE]
+  ld c,a
+  xor a
+
+.LAB_309E
+  ld [de],a
+  inc de
+  dec c
+  jr z,.LAB_30B9
+
+  dec b
+  jr nz,.LAB_309E
+
+  ld hl,$FFB8
+  ld a,[hl+]
+  ld h,[hl]
+  ld l,a
+  jr .LAB_30B3
+
+
+.LAB_30AE
+  ld h,b
+  ld l,c
+  ldh a,[$BE]
+  ld c,a
+
+.LAB_30B3
+  ld a,[hl+]
+  ld [de],a
+  inc de
+  dec c
+  jr c,.LAB_30B3
+
+.LAB_30B9
+  pop hl
+
+.LAB_30BA
+  ldh a,[$BD]
+  ld b,a
+  ld a,d
+  cp b
+  jr c,.LAB_30CA
+  jr nz,.LAB_30CD
+
+  ld c,a
+  ld a,e
+  cp c
+  jr c,.LAB_30CD
+
+.LAB_30CA
+  pop bc
+  jr .LAB_3052
+
+
+.LAB_30CD
+  pop bc
+  pop af
+  ld [$2100]
+  ret
+
+
+
 section "3317", rom0[$3317]
 FUN_3317::
   nop
