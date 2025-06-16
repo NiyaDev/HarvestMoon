@@ -1,11 +1,13 @@
 
 ;; Definitions
 include "includes/hardware.inc"
+include "includes/hardware_niya.inc"
 include "src/macros.asm"
 
 ;; RAM
 include "src/ram/sram.asm"
 include "src/ram/wram.asm"
+include "src/ram/hram.asm"
 
 ;; Home
 include "src/resets.asm"
@@ -41,7 +43,7 @@ Start::
   ld sp,$DFEF
 
 ; Zero out DMA function
-  ld hl,_RUNDMA
+  ld hl,hDMA
   ld bc,$007F
   call memclr
 
@@ -66,9 +68,9 @@ Start::
 ; TODO: 
   call FUN_2426
 
-; Set $FF8D to 2
+; Set hFF8D to 2
   ld a,2
-  ldh [$FF8D],a
+  ldh [hFF8D],a
 
   call vblank_wait
 
@@ -117,8 +119,8 @@ Start::
 ; Reset stack pointer
   ld sp,$DFEF
 
-; memclr(_RUNDMA,$007F)
-  ld hl,_RUNDMA
+; memclr(hDMA,$007F)
+  ld hl,hDMA
   ld bc,$007F
   call memclr
 
@@ -340,11 +342,11 @@ section "206C", rom0[$206C]
 FUN_206C::
   nop
 
-include "src/jumptable.asm" ; $2078->$20A0
-include "src/memory.asm"
-include "src/screen.asm"
+include "src/bank0/jumptable.asm" ; $2078->$20A0
+include "src/bank0/memory.asm"
+include "src/bank0/screen.asm"
 
-include "src/supergameboy.asm" ; $22E8->$23AF
+include "src/bank0/supergameboy.asm" ; $22E8->$23AF
 
 section "23E9", rom0[$23E9]
 FUN_23E9::
@@ -466,17 +468,17 @@ FUN_3036::
   ld a,c
   ld [$2100],a
   ld a,d
-  ldh [$B9],a
+  ldh [$FFB9],a
   ld a,e
-  ldh [$B8],a
+  ldh [$FFB8],a
   ld a,[hl+]
-  ldh [$BA],a
+  ldh [$FFBA],a
   add e
-  ldh [$BC]
+  ldh [$FFBC],a
   ld a,[hl+]
-  ldh [$BB],
+  ldh [$FFBB],a
   adc d
-  ldh [$BD],a
+  ldh [$FFBD],a
   ld c,0
 
 .LAB_3052
@@ -507,7 +509,7 @@ FUN_3036::
   inc a
   inc a
   inc a
-  ldh [$BE],a
+  ldh [$FFBE],a
   ld a,[hl+]
   ld b,a
   push hl
@@ -525,13 +527,13 @@ FUN_3036::
   ld a,d
   sbc b
   ld b,a
-  ldh a,[$B9]
+  ldh a,[$FFB9]
   cp b
   jr c,.LAB_30AE
 
   jr nz,.LAB_3095
 
-  ldh a,[$B8]
+  ldh a,[$FFB8]
   cp c
   jr c,.LAB_30AE
   jr z,.LAB_30AE
@@ -541,7 +543,7 @@ FUN_3036::
   xor $FF
   inc a
   ld b,a
-  ldh a,[$BE]
+  ldh a,[$FFBE]
   ld c,a
   xor a
 
@@ -564,7 +566,7 @@ FUN_3036::
 .LAB_30AE
   ld h,b
   ld l,c
-  ldh a,[$BE]
+  ldh a,[$FFBE]
   ld c,a
 
 .LAB_30B3
@@ -578,7 +580,7 @@ FUN_3036::
   pop hl
 
 .LAB_30BA
-  ldh a,[$BD]
+  ldh a,[$FFBD]
   ld b,a
   ld a,d
   cp b
@@ -598,7 +600,7 @@ FUN_3036::
 .LAB_30CD
   pop bc
   pop af
-  ld [$2100]
+  ld [$2100],a
   ret
 
 

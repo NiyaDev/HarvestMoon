@@ -150,6 +150,8 @@ check_if_sgb::
   ld hl,MLT1_PACKET
   call send_sgb_packet
   call wait_7000
+
+; Return false
   sub a
   ret
 
