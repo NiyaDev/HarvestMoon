@@ -121,7 +121,7 @@ FUN_B7_7816::
 
 .LAB_7853
   ld hl,$7B51
-  ld a,[wB884]
+  ld a,[sB884]
 
 .LAB_7859
   ld c,l

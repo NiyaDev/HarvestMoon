@@ -13,6 +13,7 @@ include "src/ram/hram.asm"
 include "src/resets.asm"
 include "src/interrupts.asm"
 include "src/home.asm"
+include "src/bank0/jumptable_61.asm"
 
 
 section "Entry", rom0[$0100]

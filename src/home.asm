@@ -1,6 +1,7 @@
 
 section "home", rom0[$0061]
 
+; Calls function in jumptable by offset A
 FUN_0061::
 ; Jump table all in BANK0:
 ;   FUN_0F9D - 1-5
@@ -18,18 +19,22 @@ FUN_0061::
   or a
   rst $08
 
-dw $3FF2
-  db $00 ; FUN_3FF2 bank 0
-dw $0F9D
-  db $00 ; FUN_0F9D bank 0
-dw $0F9D
-  db $00 ; FUN_0F9D bank 0
-dw $0F9D
-  db $00 ; FUN_0F9D bank 0
-dw $0F9D
-  db $00 ; FUN_0F9D bank 0
-dw $0F9D
-  db $00 ; FUN_0F9D bank 0
+; Does nothing
+dw FUN_3FF2
+  db $00
+
+
+dw FUN_0F9D
+  db $00
+dw FUN_0F9D
+  db $00
+dw FUN_0F9D
+  db $00
+dw FUN_0F9D
+  db $00
+dw FUN_0F9D
+  db $00
+
 dw $3FCD
   db $00 ; FUN_3FCD bank 0
 dw $3FD1
