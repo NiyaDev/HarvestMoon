@@ -32,76 +32,57 @@ Start::
   nop
   di
 
-; Set SRAM bank to 0
-  xor a
-  ld [rRAMB],a
+  xor a        ; Set SRAM bank to 0
+  ld [rRAMB],a ; 
 
-; Set ROM bank to 1
-  ld a,1
-  ld [rROMB0],a
+  ld a,1       ; Set ROM bank to 1
+  ld [rROMB0],a; 
 
-; Set Stack pointer
-  ld sp,$DFEF
+  ld sp,$DFEF  ; Set Stack pointer
 
-; Zero out DMA function
-  ld hl,hDMA
-  ld bc,$007F
-  call memclr
+  ld hl,hDMA   ; Zero out DMA function
+  ld bc,$007F  ; 
+  call memclr  ; 
 
-; Zero out $DD00->$DDFF
-  ld hl,$DD00
-  ld bc,$00FF
-  call memclr
+  ld hl,$DD00  ; Zero out $DD00->$DDFF
+  ld bc,$00FF  ; 
+  call memclr  ; 
 
-  call copy_dma
+  call copy_dma; 
 
-; Set BG palette to 0
-  xor a
-  ldh [rBGP],a
-; Set Object palette 0 to 0
-  xor a
-  ldh [rOBP0],a
-; Set Object palette 1 to 0 
-  xor a
-  ldh [rOBP1],a
+  xor a        ; 
+  ldh [rBGP],a ; Set BG palette to 0
+  xor a        ;
+  ldh [rOBP0],a; Set Object palette 0 to 0
+  xor a        ;
+  ldh [rOBP1],a; Set Object palette 1 to 0 
 
-; FUN_2426()
-; TODO: 
-  call FUN_2426
+  call FUN_2426; TODO: 
 
-; Set hFF8D to 2
-  ld a,2
-  ldh [hFF8D],a
+  ld a, 2      ;
+  ldh [hFF8D],a; Set hFF8D to 2
 
   call vblank_wait
 
-; Zero out Viewport position
-  xor a
-  ldh [rSCY],a
-  ldh [rSCX],a
+  xor a        ; 
+  ldh [rSCY],a ; Zero out Viewport position
+  ldh [rSCX],a ; 
 
-; Enable Cart SRAM
   ld a,CART_SRAM_ENABLE
-  ld [rRAMG],a
+  ld [rRAMG],a ; Enable Cart SRAM
 
-; Latch current time?
-; Missing the first set to 0
-  ld a,1
-  ld [rRTCLATCH],a
+  ld a, RTCLATCH_FINISH
+  ld [rRTCLATCH],a ; Finish latch?
 
-; Zero out $DD00
-; The part that uses this in wait_7000 isn't used
-  xor a
-  ld [wDD00],a
+  xor a        ; 
+  ld [wDD00],a ; Zero out $DD00
 
-; Check if SuperGameboy
   call check_if_sgb
-  jr nc,.no_sgb
+  jr nc,.no_sgb; Check if SuperGameboy
 
   push hl
   push af
 
-; Calls FUN_77A7() in bank 7
   banked_call 7, FUN_B7_77A7
 
   pop af
@@ -113,56 +94,45 @@ Start::
 .LAB_01AD:
   di
 
-; Zero $FFFF
-  xor a
+  xor a       ; Zero $FFFF
   ldh [$FFFF],a
 
-; Reset stack pointer
-  ld sp,$DFEF
+  ld sp,$DFEF ; Reset stack pointer
 
-; memclr(hDMA,$007F)
-  ld hl,hDMA
-  ld bc,$007F
-  call memclr
+  ld hl,hDMA  ; 
+  ld bc,$007F ; memclr(hDMA,$007F)
+  call memclr ; 
 
-; Set $FF8D to 2
-  ld a,2
+  ld a, 2     ; Set $FF8D to 2
   ldh [$FF8D],a
 
   call vblank_wait
 
-; Clear Viewport position
-  xor a
-  ldh [rSCY],a
-  ldh [rSCX],a
+  xor a       ; 
+  ldh [rSCY],a; Clear Viewport position
+  ldh [rSCX],a; 
   
-; memclr(_VRAM,$1FFF)
-  ld hl,_VRAM
-  ld bc,$1FFF
-  call memclr
+  ld hl,_VRAM ; 
+  ld bc,$1FFF ; memclr(_VRAM,$1FFF)
+  call memclr ; 
 
-; memclr(_RAM,$1CFF)
-  ld hl,_RAM
-  ld bc,$1CFF
-  call memclr
+  ld hl,_RAM  ; 
+  ld bc,$1CFF ; memclr(_RAM,$1CFF)
+  call memclr ; 
 
-; copy_dma()
-  call copy_dma
+  call copy_dma; copy_dma()
 
-; Set SRAM bank to 0
-  xor a
-  ld [rRAMB],a
+  xor a       ; Set SRAM bank to 0
+  ld [rRAMB],a; 
 
-; Set $C0A7 to 32
-  ld a,32
-  ld [wC0A7],a
+  ld a,32     ; Set $C0A7 to 32
+  ld [wC0A7],a; 
 
   call vblank_wait
 
   push hl
   push af
 
-; Calls FUN_2426() in bank 0
   banked_call 0, FUN_2426
 
   pop af
@@ -175,7 +145,6 @@ Start::
   push hl
   push af
 
-; Calls FUN_2426() in bank 0
   banked_call 0, FUN_2426
 
   pop af
@@ -183,56 +152,43 @@ Start::
   push hl
   push af
 
-; Calls FUN_7816() in bank 7
   banked_call 7, FUN_B7_7816
 
   pop af
   pop hl
 
-; Zero $FF97
-  xor a
+  xor a      ; Zero $FF97
   ldh [$FF97],a
 
-; FUN_0258()
-; TODO:
-  call FUN_0258
+  call FUN_0258 ; TODO:
 
   push hl
   push af
 
-; Calls FUN_2426() in bank 0
   banked_call 0, FUN_2426
 
   pop af
   pop hl
 
-; Zero $C0A6
-  xor a
-  ld [wC0A6],a 
-; Zero $FF8D 
-  xor a
-  ldh [$FF8D],a
-; Zero $FF9A
-  xor a
-  ldh [$FF9A],a
-; Zero $C500
-  xor a
-  ld [wC500],a
-; Zero $FF97 
-  xor a
-  ldh [$FF97],a
+  xor a         ;
+  ld [wC0A6],a  ; Zero $C0A6
+  xor a         ; 
+  ldh [$FF8D],a ; Zero $FF8D 
+  xor a         ; 
+  ldh [$FF9A],a ; Zero $FF9A
+  xor a         ; 
+  ld [wC500],a  ; Zero $C500
+  xor a         ; 
+  ldh [$FF97],a ; Zero $FF97 
 
   push hl
   push af
 
-; Calls FUN_7949() in bank 7
   banked_call 7, FUN_B7_7949
 
   pop af
   pop hl
 
-; FUN_0061()
-; TODO: 
   call FUN_0061
 
   call copy_lcdc
@@ -250,83 +206,34 @@ Start::
 
 section "0258", rom0[$0258] 
 FUN_0258::
-; Jump table:
-;   FUN_4001 bank  1 -  1
-;   FUN_5017 bank  2 -  2
-;   FUN_4001 bank  3 -  3
-;   FUN_4001 bank  4 -  4
-;   FUN_4001 bank  5 -  5
-;   FUN_4001 bank  6 -  6
-;   FUN_4001 bank  9 - 19
-;   FUN_46FC bank  9 - 20
-;   FUN_4CA5 bank  9 - 21
-;   FUN_4DD2 bank  9 - 22
-;   FUN_4EDB bank  9 - 23
-;   FUN_4001 bank 14 -  8
-;   FUN_54EA bank 14 -  9
-;   FUN_5AC6 bank 14 - 10
-;   FUN_6160 bank 14 - 11
-;   FUN_665A bank 14 - 12
-;   FUN_638E bank 15 - 15
-;   FUN_4001 bank 16 -  7
-;   FUN_4F17 bank 16 - 13
-;   FUN_4F2D bank 16 - 14
-;   FUN_4001 bank 29 - 16
-;   FUN_4350 bank 29 - 17
-;   FUN_468C bank 29 - 18
-;   FUN_6E51 bank 31 -  0
   ld a,[wC0A7]
   or a
   rst $08
 
-dw $6E51
-  db $1F ; FUN_6E51 bank 31
-dw $4001
-  db $01 ; FUN_4001 bank 1
-dw $5017
-  db $02 ; FUN_5017 bank 2
-dw $4001
-  db $03 ; FUN_4001 bank 3
-dw $4001
-  db $04 ; FUN_4001 bank 4
-dw $4001
-  db $05 ; FUN_4001 bank 5
-dw $4001
-  db $06 ; FUN_4001 bank 6
-dw $4001
-  db $10 ; FUN_4001 bank 16
-dw $4001
-  db $0E ; FUN_4001 bank 14
-dw $54EA
-  db $0E ; FUN_54EA bank 14
-dw $5AC6
-  db $0E ; FUN_5AC6 bank 14
-dw $6160
-  db $0E ; FUN_6160 bank 14
-dw $665A
-  db $0E ; FUN_665A bank 14
-dw $4F17
-  db $10 ; FUN_4F17 bank 16
-dw $4F2D
-  db $10 ; FUN_4F2D bank 16
-dw $638E
-  db $0F ; FUN_638E bank 15
-dw $4001
-  db $1D ; FUN_4001 bank 29
-dw $4350
-  db $1D ; FUN_4350 bank 29
-dw $468C
-  db $1D ; FUN_468C bank 29
-dw $4001
-  db $09 ; FUN_4001 bank 9
-dw $46FC
-  db $09 ; FUN_46FC bank 9
-dw $4CA5
-  db $09 ; FUN_4CA5 bank 9
-dw $4DD2
-  db $09 ; FUN_4DD2 bank 9
-dw $4EDB
-  db $09 ; FUN_4EDB bank 9
+jumptable 31, $6E51
+jumptable  1, $4001
+jumptable  2, $5017
+jumptable  3, $4001
+jumptable  4, $4001
+jumptable  5, $4001
+jumptable  6, $4001
+jumptable 16, $4001
+jumptable 14, $4001
+jumptable 14, $54EA
+jumptable 14, $5AC6
+jumptable 14, $6160
+jumptable 14, $665A
+jumptable 16, $4F17
+jumptable 16, $4F2D
+jumptable 15, $638E
+jumptable 29, $4001
+jumptable 29, $4350
+jumptable 29, $468C
+jumptable  9, $4001
+jumptable  9, $46FC
+jumptable  9, $4CA5
+jumptable  9, $4DD2
+jumptable  9, $4EDB
 
 
 
@@ -359,21 +266,18 @@ FUN_23E9::
 
   pop hl
 
-; Setting intensity
-  ld a,%11100100
-  ldh [rBGP],a
+  ld a,%11100100 ; Setting intensity
+  ldh [rBGP],a   ; 
 
   pop af
   ld c,a
   ld de,_VRAM8800
   call FUN_3036
 
-; Zero out viewport
-  xor a
-  ldh [rSCY],a
-  ldh [rSCX],a
+  xor a        ; 
+  ldh [rSCY],a ; Zero out viewport
+  ldh [rSCX],a ; 
 
-; 
   ld hl,_SCRN0
   ld de,12
   ld a,$80
@@ -391,41 +295,34 @@ FUN_23E9::
   dec c
   jr nz,.outer
 
-; Turn on LCD and background
   ld a,LCDCF_ON | LCDCF_BGON
-  ldh [rLCDC],a
-  call wait_7000
+  ldh [rLCDC],a  ; Turn on LCD and background
+  call wait_7000 ; 
 
-; Send packet in hl
-  pop hl
+  pop hl         ; Send packet in hl
   call send_sgb_packet
-  call wait_7000
+  call wait_7000 ; 
 
   ret
-
   ret
 
 
 
-section "2426", rom0[$2426] 
-FUN_2426::
+section "2426", rom0[$2426]
+
 ; Possibly audio initialization
-
-; FUN_2468(0,0)
+FUN_2426::
   ld bc,0
   call FUN_2468
 
-; Turn Audio on
-  ld a,$80
-  ldh [rNR52],a
-; Turn off Audio panning
-  xor a
-  ldh [rNR51],a
-  ld [wD397],a ;Set to same as rNR52?
+  ld a,$80      ; Turn Audio on
+  ldh [rNR52],a ; 
+  xor a         ; Turn off Audio panning
+  ldh [rNR51],a ;
+  ld [wD397],a  ; Set to same as rNR52?
   
-; Max out volume and turn off VIN
-  ld a,$77
-  ldh [rNR50],a
+  ld a,$77      ; Max out volume and turn off VIN
+  ldh [rNR50],a ; 
 
 ; $FF, $00, $00, $00, $00
 ; $00, $00, $00, $00, $00

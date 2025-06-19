@@ -1,5 +1,8 @@
 
 section "77A7", romx[$77A7], bank[7]
+
+; 
+; Only called in SGB mode
 FUN_B7_77A7::
   di
 
@@ -12,15 +15,13 @@ FUN_B7_77A7::
   ldh [rOBP0],a
   ldh [rOBP1],a
 
-; Set SGB colors
-  ld hl,PAL01_PACKET
-  call send_sgb_packet
-  call wait_7000
+  ld hl,PAL01_PACKET   ; 
+  call send_sgb_packet ; Set SGB colors
+  call wait_7000       ; 
 
-; Make screen blank
   ld hl,MASK_EN_PACKET_BLANKC
-  call send_sgb_packet
-  call wait_7000
+  call send_sgb_packet ; Make screen blank
+  call wait_7000       ; 
 
   ld hl,DATA_SND_PACKETS
   ld b,8
@@ -28,21 +29,18 @@ FUN_B7_77A7::
   push hl
   push bc
 
-; Send packets in reverse
-  call send_sgb_packet
-  call wait_7000
+  call send_sgb_packet ; Send packets in reverse
+  call wait_7000       ; 
 
   pop bc
   pop hl
 
-; Increment
-  ld de,16
-  add hl,de
+  ld de,16   ; Increment
+  add hl,de  ; 
   
   dec b
   jr nz,.send_data
 
-;
   ld hl,$7D8A
   ld a,$13
   ld de,ATTR_TRN_PACKET
@@ -58,10 +56,9 @@ FUN_B7_77A7::
   ldh [rOBP0],a
   ldh [rOBP1],a
 
-; Cancel mask
   ld hl,MASK_EN_PACKET_CANCEL
-  call send_sgb_packet
-  call wait_7000
+  call send_sgb_packet ; Cancel mask
+  call wait_7000       ; 
 
   ret
 

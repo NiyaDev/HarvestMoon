@@ -1,52 +1,49 @@
+
+
 section "calc_jumptable", rom0[$2078]
+
+; Calculates the target of the jumptable
 calc_jumptable::
-; Triples a, then adds it to the current return address in hl
-  ld e,a
-  ld d,0
-  ld l,a
-  ld h,0
-  add hl,hl
-  add hl,de
-  ld e,l
-  ld d,h
+  ld e,a    ; 
+  ld d,0    ; 
+  ld l,a    ; 
+  ld h,0    ; Triples a, then adds it to current return address in hl
+  add hl,hl ; 
+  add hl,de ; 
+  ld e,l    ; 
+  ld d,h    ; 
 
   pop hl
   add hl,de
 
-; Grabs first two bytes to make the address
-; then the last byte for the bank
-  ld e,[hl]
-  inc hl
-  ld d,[hl]
-  inc hl
-  ld a,[hl]
-  ld l,e
-  ld h,d
+  ld e,[hl] ; 
+  inc hl    ; 
+  ld d,[hl] ; 
+  inc hl    ; Grabs first two bytes to make the address then the last byte for bank
+  ld a,[hl] ; 
+  ld l,e    ; 
+  ld h,d    ; 
 
-section "set_bank_then_jump", rom0[$208B] 
+
+; Sets the bank and then jumps
 set_bank_then_jump::
-; Grabs current ROM bank and sets it to what's in a
-  push bc
-  ld b,a
-  ld a,[$4000]
-  ld c,a
-  ld a,b
+  push bc       ; 
+  ld b,a        ; 
+  ld a,[$4000]  ; Grabs current ROM bank and sets it to a
+  ld c,a        ; 
+  ld a,b        ; 
   ld [rROMB0+$100],a
-  ld a,c
+  ld a,c        ; 
+  pop bc        ;
 
-  pop bc
-  push af
+  push af       ; 
+  call jump_hl  ; Calls jump_hl to set the return addr of that function here
 
-; Calls jump_hl to set the return addr of that function here
-  call jump_hl
-
-; Resets ROM bank to what it started with
-  pop af
+  pop af        ; Resets ROM bank to what it started with
   ld [rROMB0+$100],a
 
-; Return to original call
-  ret
+  ret           ; Return to original call
 
-section "jump_hl", rom0[$20A0]
+; Jump to hl
 jump_hl::
   jp hl

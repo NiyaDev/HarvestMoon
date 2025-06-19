@@ -32,7 +32,7 @@ FUN_0F9D::
   call FUN_24C7
   ret
 
-.unused:        ; 
+.unused:
   ld a, 11      ; This path should be unsused?
   call FUN_24C4 ; 
   ret           ; 
@@ -168,52 +168,34 @@ FUN_24CD::
 
 section "jmptbl_61_3fcd", ROM0[$3FCD]
 
-jt_61::
 ; 
-.lab_3FCD:
+jt_61::
+.val_34: ; 3FCD
   ld a, 34
   jr .call_fun
-
-; 
-.lab_3FD1:
+.val_42: ; 3FD1
   ld a, 42
   jr .call_fun
-
-; 
-.lab_3FD5:
+.val_38: ; 3FD5
   ld a, 38
   jr .call_fun
-
-; 
-.lab_3FD9:
+.val_23: ; 3FD9
   ld a, 23
   jr .call_fun
-
-; 
-.lab_3FDD:
+.val_0: ; 3FDD
   ld a, 0
   jr .call_fun
-
-; 
-.lab_3FE1:
+.val_4: ; 3FE1
   ld a, 4
   jr .call_fun
-
-; 
-.lab_3FE5:
+.val_84: ; 3FE5
   ld a, 84
   jr .call_fun
-
-; 
-.lab_3FE9:
+.val_30: ; 3FE9
   ld a, 30
   jr .call_fun
-
-; 
-.lab_3FED:
+.val_27: ; 3FED
   ld a, 27
-
-; 
 .call_fun:
   call FUN_24C4
 .return:
@@ -226,5 +208,7 @@ FUN_3FF3::
   call FUN_24C7
   ret
 
+
+db $FF,$FF,$FF,$FF,$FF,$FF,$FF
 
 

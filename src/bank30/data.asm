@@ -3,136 +3,20 @@ section "b30_data", romx[$4000], bank[30]
 
 db 30 ; Bank number
 
-
-; ??
-db $32, 0
-dw $4169
-db $4B, 1
-dw $4218
-db $64, 2
-dw $432F
-db $7D, 3
-dw $4368
-
-; ??
-db $32, 0
-dw $43D7
-db $4B, 1
-dw $443C
-db $64, 2
-dw $448B
-db $7D, 3
-dw $44E2
-
-
-; 0F9D (8)
-db $32, 0
-dw $4557
-db $4B, 1
-dw $4668
-db $64, 2
-dw $473F
-
-
-; UNUSED (11) (so far)
-db $32, 0
-dw $47F6
-db $4B, 1
-dw $48E1
-db $64, 2
-dw $498E
-db $7D, 3
-dw $49BF
-
-
-; 0F9D (15)
-db $32, 0
-dw $4A40
-db $4B, 1
-dw $4AF5
-db $64, 2
-dw $4B86
-db $7D, 3
-dw $4C1F
-
-
-; 0F9D (19)
-db $32, 0
-dw $4CFA
-db $4B, 1
-dw $4DDB
-db $64, 2
-dw $4F06
-db $7D, 3
-dw $4F83
-
-
-; ??
-db $32, 0
-dw $4F88
-db $4B, 1
-dw $5085
-db $64, 2
-dw $51EA
-db $7D, 3
-dw $52AB
-
-; ??
-db $32, 0
-dw $52FE
-db $4B, 1
-dw $53B1
-db $64, 2
-dw $5414
-
-; ??
-db $32, 0
-dw $5489
-db $4B, 1
-dw $5568
-db $64, 2
-dw $562F
-db $7D, 3
-dw $5688
-
-; ??
-db $32, 0
-dw $56CB
-db $4B, 1
-dw $57A2
-db $64, 2
-dw $583B
-db $7D, 3
-dw $58EE
-
-; ??
-db $32, 0
-dw $597F
-db $4B, 1
-dw $5A24
-db $64, 2
-dw $5AE9
-db $7D, 3
-dw $5B18
-
-; ??
-db $32, 0
-dw $5B67
-db $4B, 1
-dw $5C28
-db $64, 2
-dw $5CF7
-db $7D, 3
-dw $5D52
-
-; ??
-db 0, 0
-dw $5E7D
-
-; ??
-db 0, 0
-dw $5E90
-
+unk_struc_1 4, $4169, $4218, $432F, $4368 ; 3FDD
+unk_struc_1 4, $43D7, $443C, $448B, $44E2 ; 3FE1
+unk_struc_1 3, $4557, $4668, $473F        ; 0F9D (8)
+unk_struc_1 4, $47F6, $48E1, $498E, $49BF ; UNUSED (11) (so far)
+unk_struc_1 4, $4A40, $4AF5, $4B86, $4C1F ; 0F9D (15)
+unk_struc_1 4, $4CFA, $4DDB, $4F06, $4F83 ; 0F9D (19)
+unk_struc_1 4, $4F88, $5085, $51EA, $52AB ; 3FD9
+unk_struc_1 3, $52FE, $53B1, $5414        ; 3FED
+unk_struc_1 4, $5489, $5568, $562F, $5688 ; 3FE9
+unk_struc_1 4, $56CB, $57A2, $583B, $58EE ; 3FCD
+unk_struc_1 4, $597F, $5A24, $5AE9, $5B18 ; 3FD5
+unk_struc_1 4, $5B67, $5C28, $5CF7, $5D52 ; 3FD1
+unk_struc_1 1, $5E7D                      ; 0F9D_64
+unk_struc_1 1, $5E90                      ; 0F9D_65
 
 
 
