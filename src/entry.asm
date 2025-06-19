@@ -617,6 +617,6 @@ FUN_340E::
   nop
 
 include "src/bank7/FUN_77A7.asm"
-
+include "src/bank30/data.asm"
 
 section "end", romx[$7FFF], bank[31]

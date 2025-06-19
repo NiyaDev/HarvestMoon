@@ -20,10 +20,10 @@ FUN_0061::
   rst $08
 
 ; Does nothing
-dw FUN_3FF2
+dw jt_61.return
   db $00
 
-
+; Writes some data
 dw FUN_0F9D
   db $00
 dw FUN_0F9D
@@ -35,78 +35,116 @@ dw FUN_0F9D
 dw FUN_0F9D
   db $00
 
-dw $3FCD
-  db $00 ; FUN_3FCD bank 0
-dw $3FD1
-  db $00 ; FUN_3FD1 bank 0
-dw $3FD5
-  db $00 ; FUN_3FD5 bank 0
-dw $3FD5
-  db $00 ; FUN_3FD5 bank 0
-dw $3FD5
-  db $00 ; FUN_3FD5 bank 0
-dw $3FD5
-  db $00 ; FUN_3FD5 bank 0
-dw $3FD5
-  db $00 ; FUN_3FD5 bank 0
-dw $3FF2
-  db $00 ; FUN_3FF2 bank 0
-dw $3FF2
-  db $00 ; FUN_3FF2 bank 0
+; 
+dw jt_61.lab_3FCD
+  db $00
+
+; 
+dw jt_61.lab_3FD1
+  db $00
+dw jt_61.lab_3FD5
+  db $00
+dw jt_61.lab_3FD5
+  db $00
+dw jt_61.lab_3FD5
+  db $00
+dw jt_61.lab_3FD5
+  db $00
+dw jt_61.lab_3FD5
+  db $00
+
+; 
+dw jt_61.return
+  db $00
+dw jt_61.return
+  db $00
+
+; 
 dw $3FD9
-  db $00 ; FUN_3FD9 bank 0
-dw $3FDD
-  db $00 ; FUN_3FDD bank 0
-dw $3FDD
-  db $00 ; FUN_3FDD bank 0
-dw $3FE1
-  db $00 ; FUN_3FE1 bank 0
-dw $3FE5
-  db $00 ; FUN_3FE5 bank 0
-dw $3FE5
-  db $00 ; FUN_3FE5 bank 0
-dw $3FE5
-  db $00 ; FUN_3FE5 bank 0
-dw $3FE5
-  db $00 ; FUN_3FE5 bank 0
-dw $3FE5
-  db $00 ; FUN_3FE5 bank 0
-dw $3FE5
-  db $00 ; FUN_3FE5 bank 0
-dw $3FE5
-  db $00 ; FUN_3FE5 bank 0
-dw $3FE5
-  db $00 ; FUN_3FE5 bank 0
-dw $3FCD
-  db $00 ; FUN_3FCD bank 0
-dw $3FE1
-  db $00 ; FUN_3FE1 bank 0
-dw $3FE1
-  db $00 ; FUN_3FE1 bank 0
-dw $3FCD
-  db $00 ; FUN_3FCD bank 0
-dw $3FCD
-  db $00 ; FUN_3FCD bank 0
-dw $3FF2
-  db $00 ; FUN_3FF2 bank 0
-dw $3FF2
-  db $00 ; FUN_3FF2 bank 0
-dw $3FCD
-  db $00 ; FUN_3FCD bank 0
-dw $3FE1
-  db $00 ; FUN_3FE1 bank 0
-dw $3FF2
-  db $00 ; FUN_3FF2 bank 0
-dw $3FED
-  db $00 ; FUN_3FED bank 0
-dw $3FF3
-  db $00 ; FUN_3FF3 bank 0
-dw $3FF3
-  db $00 ; FUN_3FF3 bank 0
-dw $3FF2
-  db $00 ; FUN_3FF2 bank 0
-dw $3FF3
-  db $00 ; FUN_3FF3 bank 0
+  db $00
+
+; 
+dw jt_61.lab_3FDD
+  db $00
+dw jt_61.lab_3FDD
+  db $00
+
+; 
+dw jt_61.lab_3FE1
+  db $00
+
+; 
+dw jt_61.lab_3FE5
+  db $00
+dw jt_61.lab_3FE5
+  db $00
+dw jt_61.lab_3FE5
+  db $00
+dw jt_61.lab_3FE5
+  db $00
+dw jt_61.lab_3FE5
+  db $00
+dw jt_61.lab_3FE5
+  db $00
+dw jt_61.lab_3FE5
+  db $00
+dw jt_61.lab_3FE5
+  db $00
+
+; 
+dw jt_61.lab_3FCD
+  db $00
+
+; 
+dw jt_61.lab_3FE1
+  db $00
+dw jt_61.lab_3FE1
+  db $00
+
+; 
+dw jt_61.lab_3FCD
+  db $00
+dw jt_61.lab_3FCD
+  db $00
+
+; 
+dw jt_61.return
+  db $00
+dw jt_61.return
+  db $00
+
+; 
+dw jt_61.lab_3FCD
+  db $00
+
+; 
+dw jt_61.lab_3FE1
+  db $00
+
+; 
+dw jt_61.return
+  db $00
+
+; 
+dw jt_61.lab_3FED
+  db $00
+
+; 
+dw FUN_3FF3
+  db $00
+
+; 
+dw FUN_3FF3
+  db $00
+
+; 
+dw jt_61.return
+  db $00
+
+; 
+dw FUN_3FF3
+  db $00
+
 
 db $FF, $FF, $FF, $FF, $FF
 db $FF, $FF, $FF, $FF, $FF

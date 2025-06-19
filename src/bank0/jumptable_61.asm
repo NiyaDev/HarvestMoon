@@ -32,8 +32,8 @@ FUN_0F9D::
   call FUN_24C7
   ret
 
-.unused:        ; This path should never be taken
-  ld a, 11      ; 
+.unused:        ; 
+  ld a, 11      ; This path should be unsused?
   call FUN_24C4 ; 
   ret           ; 
 
@@ -42,28 +42,31 @@ FUN_0F9D::
   call FUN_24C4
 
 .is_one:
-  ld a, $40
+  ld a, 64
   call FUN_24CD
   ret
 
 .is_three:
-  ld a, $41
+  ld a, 65
   call FUN_24CD
   ret
 
 
 section "24c4", ROM0[$24C4]
+
+; Call FUN_24CD 4 times
 FUN_24C4::
   call FUN_24CD
 
-section "24c7", ROM0[$24C7]
+; Call FUN_24CD 3 times
 FUN_24C7::
   call FUN_24CD
   call FUN_24CD
 
-section "24cd", ROM0[$24CD]
-
-; 
+; Takes $4001 + A*4 as a pointer to data in bank 4 and copys the data to WRAM
+; [0] offset for WRAM
+; [1] interation?
+; [2-3] Pointer?
 FUN_24CD::
   push bc
   push de
@@ -79,7 +82,7 @@ FUN_24CD::
   ld [rROMB0_1], a
 
   ld h, 0       ; 
-  add hl, hl    ; Multiply input A by 2
+  add hl, hl    ; Multiply input A by 4
   add hl, hl    ; 
   
   ld de, $4001  ; 
@@ -98,63 +101,61 @@ FUN_24CD::
   cp $FF        ; If it is, jump
   jr z,.lab_2512; 
 
+  ;; NOTE: It looks like the value sent is probably the same value rotated right
   inc hl        ; 
-  ld a, [hl-]   ; 
-  ld b, $EE     ; 
-  and 3         ; 
+  ld a, [hl-]   ; Grabs next byte at offset+1 and ANDs with %00000011
+  ld b, %11101110
+  and 3         ; If result == 0, lab_250b with $EE
   jr z,.lab_250b; 
 
-  ld b, $DD
-  cp 1
-  jr z,.lab_250b
+  ld b, %11011101
+  cp 1          ; If result of AND == 1, lab_250b with $DD
+  jr z,.lab_250b; 
 
-  ld b, $BB
-  cp 2
-  jr z,.lab_250b
+  ld b, %10111011
+  cp 2          ; If result of AND == 2, lab_250b with $BB
+  jr z,.lab_250b; 
 
-  ld b, $77
+  ld b, %01110111; If result of AND == 3, lab_250b with $77
 
 .lab_250b:
-  ld a, [wD397]
-  and B
-  ld [wD397], a
+  ld a, [wD397] ; 
+  and b         ; Get value and AND it with previous result
+  ld [wD397], a ; 
 
 .lab_2512:
-  xor a
-  ld [hl+], a
-  ld a, [de]
-  inc de
-
-  ld [hl+], a
-  ld a, [de]
-  inc de
-
-  ld [hl+], a
-  ld a, [de]
-  inc de
-
-  ld [hl], a
+  xor a         ; 
+  ld [hl+], a   ; 
+  ld a, [de]    ; 
+  inc de        ; 
+  ld [hl+], a   ; 
+  ld a, [de]    ; Copy three values from DE to HL
+  inc de        ; 
+  ld [hl+], a   ; 
+  ld a, [de]    ; 
+  inc de        ; 
+  ld [hl], a    ;
   
-  push hl
-  inc hl
-  inc hl
-  inc hl
-  inc hl
-  inc hl
+  push hl       ; 
+  inc hl        ; 
+  inc hl        ; 
+  inc hl        ; 
+  inc hl        ; Set offset+5 to $FF
+  inc hl        ; 
+  ld a, $FF     ; 
+  ld [hl], a    ; 
+  pop hl        ; 
 
-  ld a, $FF
-  ld [hl], a
-  pop hl
+  ld de, $0014  ; 
+  add hl, de    ; Set offset+20 to 0
+  xor a         ; 
+  ld [hl], a    ; 
 
-  ld de, $0014
-  add hl, de
-  xor a
-  ld [hl], a
-  pop af
-
+  pop af        ; Reset ROM bank
   ld [rROMB0_1], a
-  ld a, [wD39E]
-  inc a
+
+  ld a, [wD39E] ; Load value from WRAM and inc it
+  inc a         ; 
 
   pop hl
   pop de
@@ -167,88 +168,63 @@ FUN_24CD::
 
 section "jmptbl_61_3fcd", ROM0[$3FCD]
 
+jt_61::
 ; 
-FUN_3FCD::
-  ld a,$22
-  jr FUN_3FEF
-
-
-section "jmptbl_61_3fd1", ROM0[$3FD1]
+.lab_3FCD:
+  ld a, 34
+  jr .call_fun
 
 ; 
-FUN_3FD1::
-  ld a, $2A
-  jr FUN_3FEF
-
-
-section "jmptbl_61_3fd5", ROM0[$3FD5]
+.lab_3FD1:
+  ld a, 42
+  jr .call_fun
 
 ; 
-FUN_3FD5::
-  ld a, $26
-  jr FUN_3FEF
-
-
-section "jmptbl_61_3fd9", ROM0[$3FD9]
+.lab_3FD5:
+  ld a, 38
+  jr .call_fun
 
 ; 
-FUN_3FD9::
-  ld a, $17
-  jr FUN_3FEF
-
-
-section "jmptbl_61_3fdd", ROM0[$3FDD]
+.lab_3FD9:
+  ld a, 23
+  jr .call_fun
 
 ; 
-FUN_3FDD::
+.lab_3FDD:
   ld a, 0
-  jr FUN_3FEF
-
-
-section "jmptbl_61_3fe1", ROM0[$3FE1]
+  jr .call_fun
 
 ; 
-FUN_3FE1::
-  ld a,4
-  jr FUN_3FEF
-
-
-section "jmptbl_61_3fe5", ROM0[$3FE5]
+.lab_3FE1:
+  ld a, 4
+  jr .call_fun
 
 ; 
-FUN_3FE5::
-  ld a, $54
-  jr FUN_3FEF
-
-
-section "3fe9", ROM0[$3FE9]
+.lab_3FE5:
+  ld a, 84
+  jr .call_fun
 
 ; 
-FUN_3FE9::
-  ld a, $1E
-  jr FUN_3FEF
-
-
-section "3fed", ROM0[$3FED]
+.lab_3FE9:
+  ld a, 30
+  jr .call_fun
 
 ; 
-FUN_3FED::
-  ld a, $1B
-
-
-section "3fef", ROM0[$3FEF]
+.lab_3FED:
+  ld a, 27
 
 ; 
-FUN_3FEF::
+.call_fun:
   call FUN_24C4
-
-
-section "jmptbl_61_3ff2", ROM0[$3FF2]
-
-; Returns
-FUN_3FF2::
+.return:
   ret
 
+
+; 
+FUN_3FF3::
+  ld a, 8
+  call FUN_24C7
+  ret
 
 
 
