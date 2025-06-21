@@ -342,35 +342,40 @@ FUN_2426::
   dec b
   jr nz,.LAB_2441
 
-; Zero $D3A3
-  xor a
-  ld [wD3A3],a
+  xor a        ; Zero $D3A3
+  ld [wD3A3],a ; 
   ret
 
-section "2468", rom0[$2468] 
+
+section "2468", rom0[$2468]
+
+; 
 FUN_2468::
-; Sets three variables to b, c, and 0
-  ld a,b
-  ld [wD3A0],a
-  ld a,c
-  ld [wD3A1],a
-  xor a
-  ld [wD3A2],a
+  ld a,b       ; Sets three variables to b, c, and 0
+  ld [wD3A0],a ; 
+  ld a,c       ; 
+  ld [wD3A1],a ; 
+  xor a        ; 
+  ld [wD3A2],a ; 
   ret
+
 
 section "3036", rom0[$3036]
-FUN_3036::
-  ld a,[rRAMB]
-  push af
 
-  ld a,c
-  ld [$2100],a
-  ld a,d
-  ldh [$FFB9],a
-  ld a,e
-  ldh [$FFB8],a
-  ld a,[hl+]
-  ldh [$FFBA],a
+FUN_3036::
+  ld a,[rRAMB] ; Save RAM bank
+  push af      ; 
+
+  ld a,c       ; Set ROM bank to c
+  ld [rROMB0+$100],a
+
+  ld a,d       ; 
+  ldh [$FFB9],a; Set $FFB9 to de
+  ld a,e       ; 
+  ldh [$FFB8],a; 
+
+  ld a,[hl+]   ; 
+  ldh [$FFBA],a; 
   add e
   ldh [$FFBC],a
   ld a,[hl+]
